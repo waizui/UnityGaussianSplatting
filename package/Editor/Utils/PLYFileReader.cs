@@ -40,6 +40,7 @@ namespace GaussianSplatting.Editor.Utils
                 if (line == "end_header" || line.Length == 0)
                     break;
                 var tokens = line.Split(' ');
+                UnityEngine.Debug.Log(tokens.Aggregate("", (s, t) => s + t + " "));
                 if (tokens.Length == 3 && tokens[0] == "format" && tokens[1] == "binary_little_endian" && tokens[2] == "1.0")
                     got_binary_le = true;
                 if (tokens.Length == 3 && tokens[0] == "element" && tokens[1] == "vertex")

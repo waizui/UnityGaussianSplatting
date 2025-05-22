@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "projects/GaussianExample"
+		},
+		{
+			"path": "package"
+		}
+	],
+	"settings": {
+		"dotnet.defaultSolution": "GaussianExample.sln",
+		"dotnet.preferCSharpExtension": true
+	}
+}
