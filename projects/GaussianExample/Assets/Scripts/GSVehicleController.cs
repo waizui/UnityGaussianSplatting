@@ -10,9 +10,11 @@ namespace StreetGS
     {
         class TrajectoryPoint
         {
-            private float[] data; //[obj_id, track_id, x, y, z, qw, qx, qy, qz]
+            private float[] data; //[track_id,frame_id, x, y, z, qw, qx, qy, qz]
 
-            public int trackId => (int)data[1];
+            public int trackId => (int)data[0];
+
+            public int frameId => (int)data[1];
 
             public TrajectoryPoint(float[] data)
             {
@@ -31,8 +33,9 @@ namespace StreetGS
         }
 
         public TextAsset trajectoryFile;
-
         public int trackId = 0;
+        public Quaternion preRotation;
+
         private int m_curTrackIndex = 0;
 
         void Start()
@@ -66,14 +69,14 @@ namespace StreetGS
             while (m_curTrackIndex < track.Count)
             {
                 var point = track[m_curTrackIndex];
-                Debug.Log(point.Position());
                 transform.position = point.Position();
-                // transform.rotation = Quaternion.AngleAxis(90f, Vector3.left) * point.Rotation();
-                transform.rotation = point.Rotation();
+                transform.rotation = preRotation * point.Rotation();
 
                 yield return new WaitForSeconds(0.5f);
                 m_curTrackIndex++;
             }
+
+            this.gameObject.SetActive(false);
 
         }
 
