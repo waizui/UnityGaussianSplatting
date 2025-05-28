@@ -10,11 +10,12 @@ namespace StreetGS
     {
         class TrajectoryPoint
         {
-            private float[] data; //[track_id,frame_id, x, y, z, qw, qx, qy, qz]
+            private float[] data; //[track_id,frame_id, x, y, z, qw, qx, qy, qz, delta_time]
 
             public int trackId => (int)data[0];
 
             public int frameId => (int)data[1];
+            public float timestamp => data[9] * 0.5f;
 
             public TrajectoryPoint(float[] data)
             {
@@ -35,6 +36,7 @@ namespace StreetGS
         public TextAsset trajectoryFile;
         public int trackId = 0;
         public Quaternion preRotation;
+        public float speedFactor;
 
         private int m_curTrackIndex = 0;
 
@@ -50,13 +52,12 @@ namespace StreetGS
             var lines = file.text.Split('\n');
             foreach (var line in lines)
             {
+                if (string.IsNullOrEmpty(line) || line.StartsWith("#"))
+                    continue;
                 var values = line.Split(',');
-                if (values.Length == 9)
-                {
-                    var data = values.Select(float.Parse).ToArray();
-                    var point = new TrajectoryPoint(data);
-                    trajs.Add(point);
-                }
+                var data = values.Select(float.Parse).ToArray();
+                var point = new TrajectoryPoint(data);
+                trajs.Add(point);
             }
 
             return trajs;
@@ -66,13 +67,26 @@ namespace StreetGS
         {
             m_curTrackIndex = 0;
             var track = trajs.Where(t => t.trackId == id).ToList();
-            while (m_curTrackIndex < track.Count)
+            track.Sort((a, b) => a.frameId.CompareTo(b.frameId));
+            var tc = 0.0f;
+            while (m_curTrackIndex < track.Count - 1)
             {
                 var point = track[m_curTrackIndex];
-                transform.position = point.Position();
-                transform.rotation = preRotation * point.Rotation();
+                var nextPoint = track[m_curTrackIndex + 1];
 
-                yield return new WaitForSeconds(0.5f);
+                var t = nextPoint.timestamp - point.timestamp;
+                var dt = Time.deltaTime * speedFactor;
+                tc += dt;
+                var pos = Vector3.Lerp(point.Position(), nextPoint.Position(), tc / t);
+                transform.position = pos;
+                transform.rotation = preRotation * point.Rotation();
+                if (tc < t)
+                {
+                    yield return new WaitForEndOfFrame();
+                    continue;
+                }
+
+                tc = 0.0f;
                 m_curTrackIndex++;
             }
 
