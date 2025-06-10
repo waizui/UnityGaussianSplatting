@@ -38,12 +38,38 @@ namespace StreetGS
         public Quaternion preRotation;
         public float speedFactor;
 
+        /// <summary>
+        /// Current normalized time in the trajectory.
+        /// </summary>
+        public float currentTime => (m_currentTime + m_curSegTime) / m_totalTime;
+
+        public float totalTime => m_totalTime;
+
+        /// <summary>
+        /// Total time of the trajectory for the current track.
+        /// </summary>
+        private float m_totalTime = 0.0f;
+
+        private float m_currentTime = 0.0f;
+
+        private float m_curSegTime = 0.0f; // current time in current segment
+
         private int m_curTrackIndex = 0;
 
         void Start()
         {
             var trajs = ParseTrajectory(trajectoryFile);
             StartCoroutine(FollowTrajectory(trajs, trackId));
+        }
+
+        public float GetDeltaTime(int id)
+        {
+            var trajs = ParseTrajectory(trajectoryFile);
+            var track = trajs.Where(t => t.trackId == id).ToList();
+            if (track.Count < 2)
+                return 0.0f;
+            track.Sort((a, b) => a.frameId.CompareTo(b.frameId));
+            return track[1].timestamp - track[0].timestamp;
         }
 
         private List<TrajectoryPoint> ParseTrajectory(TextAsset file)
@@ -65,28 +91,33 @@ namespace StreetGS
 
         private IEnumerator FollowTrajectory(IEnumerable<TrajectoryPoint> trajs, int id)
         {
-            m_curTrackIndex = 0;
             var track = trajs.Where(t => t.trackId == id).ToList();
             track.Sort((a, b) => a.frameId.CompareTo(b.frameId));
-            var tc = 0.0f;
+
+            m_curTrackIndex = 0;
+            m_currentTime = 0.0f;
+            m_totalTime = track.Last().timestamp - track.First().timestamp;
+
+            m_curSegTime = 0.0f; // current time in current segment
             while (m_curTrackIndex < track.Count - 1)
             {
                 var point = track[m_curTrackIndex];
                 var nextPoint = track[m_curTrackIndex + 1];
 
-                var t = nextPoint.timestamp - point.timestamp;
+                var segmentTime = nextPoint.timestamp - point.timestamp;
                 var dt = Time.deltaTime * speedFactor;
-                tc += dt;
-                var pos = Vector3.Lerp(point.Position(), nextPoint.Position(), tc / t);
+                m_curSegTime += dt;
+                var pos = Vector3.Lerp(point.Position(), nextPoint.Position(), m_curSegTime / segmentTime);
                 transform.position = pos;
                 transform.rotation = preRotation * point.Rotation();
-                if (tc < t)
+                if (m_curSegTime < segmentTime)
                 {
                     yield return new WaitForEndOfFrame();
                     continue;
                 }
 
-                tc = 0.0f;
+                m_curSegTime = 0.0f;
+                m_currentTime += segmentTime;
                 m_curTrackIndex++;
             }
 

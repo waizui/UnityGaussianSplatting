@@ -425,6 +425,29 @@ namespace GaussianSplatting.Runtime
             InitSortBuffers(splatCount);
         }
 
+        /// <param name="modifyFunc"></param>
+        /// <param name="dataName">{sh,pos,...}</param>
+        public void ModifyDataBuffer(Func<GraphicsBuffer, GaussianSplatAsset, GraphicsBuffer> modifyFunc, string dataName)
+        {
+            if (!HasValidAsset)
+            {
+                Debug.LogError("Cannot modify data buffer, no valid asset set.");
+                return;
+            }
+
+            switch (dataName)
+            {
+                case "sh":
+                    m_GpuSHData = modifyFunc(m_GpuSHData, m_Asset);
+                    break;
+                default:
+                    Debug.LogError($"Unknown data buffer name: {dataName}");
+                    return;
+            }
+
+
+        }
+
         void InitSortBuffers(int count)
         {
             m_GpuSortDistances?.Dispose();
