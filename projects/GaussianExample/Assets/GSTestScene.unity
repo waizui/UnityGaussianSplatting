@@ -325,7 +325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1607111823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,7 +519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1875442132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,6 +588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2077652604}
   - component: {fileID: 2077652605}
+  - component: {fileID: 2077652606}
   - component: {fileID: 2077652602}
   m_Layer: 0
   m_Name: obj_11
@@ -611,7 +612,7 @@ MonoBehaviour:
   trajectoryFile: {fileID: 4900000, guid: 0219913a20dbc2444acdbb5e8b9ec25d, type: 3}
   trackId: 11
   preRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  speedFactor: 0.5
+  speedFactor: 0.1
 --- !u!4 &2077652604
 Transform:
   m_ObjectHideFlags: 0
@@ -654,6 +655,18 @@ MonoBehaviour:
   m_ShaderDebugPoints: {fileID: 4800000, guid: b44409fc67214394f8f47e4e2648425e, type: 3}
   m_ShaderDebugBoxes: {fileID: 4800000, guid: 4006f2680fd7c8b4cbcb881454c782be, type: 3}
   m_CSSplatUtilities: {fileID: 7200000, guid: ec84f78b836bd4f96a105d6b804f08bd, type: 3}
+--- !u!114 &2077652606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077652601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28755c6cda460d849a76268c70eacc3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
