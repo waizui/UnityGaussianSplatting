@@ -140,7 +140,7 @@ namespace StreetGS
             return job.m_ReorderedCoefficients;
         }
 
-        //TODO: Optimize
+        //TODO: Time of coefficients
         private Texture2D SetSplatsColor(Texture2D tex, GaussianSplatAsset asset)
         {
             int splatCount = asset.splatCount;
