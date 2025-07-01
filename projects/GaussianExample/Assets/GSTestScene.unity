@@ -227,6 +227,8 @@ GameObject:
   - component: {fileID: 1462254338}
   - component: {fileID: 1462254337}
   - component: {fileID: 1462254336}
+  - component: {fileID: 1462254339}
+  - component: {fileID: 1462254340}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -301,13 +303,38 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1462254335}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.08076937, y: 0.32490966, z: 0.036602113, w: -0.9415787}
-  m_LocalPosition: {x: 3.3989623, y: -0.10701412, z: -2.3962214}
+  m_LocalRotation: {x: 0.010272919, y: 0.410578, z: 0.032065623, w: -0.9112036}
+  m_LocalPosition: {x: 30.06, y: -0.23, z: -4.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -3.06119, y: -120.16, z: 0.9650629}
+--- !u!45 &1462254339
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462254335}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: 798122b00b1ddbb47ae51e3993c1741b, type: 2}
+--- !u!111 &1462254340
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462254335}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 3033f316f1887ac42b8ed99e52b8d5c8, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 3033f316f1887ac42b8ed99e52b8d5c8, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1607111822
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,7 +368,7 @@ MonoBehaviour:
   trajectoryFile: {fileID: 4900000, guid: 0219913a20dbc2444acdbb5e8b9ec25d, type: 3}
   trackId: 17
   preRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  speedFactor: 0.1
+  speedFactor: 0.5
 --- !u!114 &1607111824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,7 +546,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1875442132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,7 +562,7 @@ MonoBehaviour:
   trajectoryFile: {fileID: 4900000, guid: 0219913a20dbc2444acdbb5e8b9ec25d, type: 3}
   trackId: 40
   preRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  speedFactor: 1
+  speedFactor: 0.5
 --- !u!114 &1875442133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,7 +575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c12d929a7f62c48adbe9ff45c9a33ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Asset: {fileID: 11400000, guid: 9dc8c90a8cada2f409dd0a489b08a730, type: 2}
+  m_Asset: {fileID: 11400000, guid: b2996c019bcb76d4cb9f42e31070a267, type: 2}
   m_RenderOrder: 0
   m_SplatScale: 1
   m_OpacityScale: 1
@@ -612,7 +639,7 @@ MonoBehaviour:
   trajectoryFile: {fileID: 4900000, guid: 0219913a20dbc2444acdbb5e8b9ec25d, type: 3}
   trackId: 11
   preRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  speedFactor: 0.1
+  speedFactor: 0.5
 --- !u!4 &2077652604
 Transform:
   m_ObjectHideFlags: 0
@@ -667,6 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28755c6cda460d849a76268c70eacc3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fourierFile: {fileID: 4900000, guid: 19b7bd1a27a9dad4398af849925eceec, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
