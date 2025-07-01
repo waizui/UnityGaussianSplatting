@@ -389,7 +389,7 @@ namespace GaussianSplatting.Runtime
             var texFormat = GaussianSplatAsset.ColorFormatToGraphics(asset.colorFormat);
             var tex = new Texture2D(texWidth, texHeight, texFormat, TextureCreationFlags.DontInitializePixels | TextureCreationFlags.IgnoreMipmapLimit | TextureCreationFlags.DontUploadUponCreate) { name = "GaussianColorData" };
             tex.SetPixelData(asset.colorData.GetData<byte>(), 0);
-            tex.Apply(false, true);
+            tex.Apply(false, false);
             m_GpuColorData = tex;
             if (asset.chunkData != null && asset.chunkData.dataSize != 0)
             {
@@ -425,27 +425,21 @@ namespace GaussianSplatting.Runtime
             InitSortBuffers(splatCount);
         }
 
-        /// <param name="modifyFunc"></param>
-        /// <param name="dataName">{sh,pos,...}</param>
-        public void ModifyDataBuffer(Func<GraphicsBuffer, GaussianSplatAsset, GraphicsBuffer> modifyFunc, string dataName)
+        public void ModifyColorData(Func<Texture2D, GaussianSplatAsset, Texture2D> modifyFunc)
         {
             if (!HasValidAsset)
             {
-                Debug.LogError("Cannot modify data buffer, no valid asset set.");
+                Debug.LogError("Cannot modify color data, no valid asset set.");
                 return;
             }
 
-            switch (dataName)
+            var newTex = modifyFunc(m_GpuColorData as Texture2D, m_Asset);
+            if (newTex == null || newTex == m_GpuColorData)
             {
-                case "sh":
-                    m_GpuSHData = modifyFunc(m_GpuSHData, m_Asset);
-                    break;
-                default:
-                    Debug.LogError($"Unknown data buffer name: {dataName}");
-                    return;
+                return;
             }
-
-
+            DestroyImmediate(m_GpuColorData);
+            m_GpuColorData = newTex;
         }
 
         void InitSortBuffers(int count)
