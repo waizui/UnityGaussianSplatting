@@ -15,6 +15,7 @@ namespace StreetGS
             public int trackId => (int)data[0];
 
             public int frameId => (int)data[1];
+
             public float timestamp => data[9] * 0.5f;
 
             public TrajectoryPoint(float[] data)
@@ -107,6 +108,7 @@ namespace StreetGS
                 var segmentTime = nextPoint.timestamp - point.timestamp;
                 var dt = Time.deltaTime * speedFactor;
                 m_curSegTime += dt;
+                //TODO: Catmull-Rom interpolation
                 var pos = Vector3.Lerp(point.Position(), nextPoint.Position(), m_curSegTime / segmentTime);
                 transform.position = pos;
                 transform.rotation = preRotation * point.Rotation();
