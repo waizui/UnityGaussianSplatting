@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GaussianSplatting.Editor.Utils;
 using GaussianSplatting.Runtime;
 using Unity.Burst;
@@ -278,8 +279,12 @@ namespace GaussianSplatting.Editor
             };
             boundsJob.Schedule().Complete();
 
+            string baseName = Path.GetFileNameWithoutExtension(FilePickerControl.PathToDisplayString(m_InputFile));
+
             EditorUtility.DisplayProgressBar(kProgressTitle, "Morton reordering", 0.05f);
-            ReorderMorton(inputSplats, boundsMin, boundsMax);
+            // store index mapping
+            string pathReorder = $"{m_OutputFolder}/{baseName}_mapping.bytes";
+            ReorderMorton(inputSplats, boundsMin, boundsMax, pathReorder);
 
             // cluster SHs
             NativeArray<int> splatSHIndices = default;
@@ -290,7 +295,6 @@ namespace GaussianSplatting.Editor
                 ClusterSHs(inputSplats, m_FormatSH, out clusteredSHs, out splatSHIndices);
             }
 
-            string baseName = Path.GetFileNameWithoutExtension(FilePickerControl.PathToDisplayString(m_InputFile));
 
             EditorUtility.DisplayProgressBar(kProgressTitle, "Creating data objects", 0.7f);
             GaussianSplatAsset asset = ScriptableObject.CreateInstance<GaussianSplatAsset>();
@@ -408,7 +412,7 @@ namespace GaussianSplatting.Editor
             }
         }
 
-        static void ReorderMorton(NativeArray<InputSplatData> splatData, float3 boundsMin, float3 boundsMax)
+        static void ReorderMorton(NativeArray<InputSplatData> splatData, float3 boundsMin, float3 boundsMax, string path)
         {
             ReorderMortonJob order = new ReorderMortonJob
             {
@@ -425,7 +429,15 @@ namespace GaussianSplatting.Editor
                 order.m_SplatData[i] = copy[order.m_Order[i].Item2];
             copy.Dispose();
 
+            SaveMapping(order.m_Order,path);
+
             order.m_Order.Dispose();
+        }
+
+        static void SaveMapping(NativeArray<(ulong, int)> map, string path)
+        {
+            var b  = map.SelectMany(x =>  BitConverter.GetBytes(x.Item2)).ToArray();
+            File.WriteAllBytes(path, b);
         }
 
         [BurstCompile]
